@@ -35,7 +35,7 @@ Let us call this quantity $$V$$, which we expect to be a function of the affine 
 We can compute $$V$$ as follows:
 
 $$
-V(w, b, \mu, \Sigma) = \int_{\mathbb{R}^N} \frac{d^nx}{(2\pi)^{-N/2}\sqrt{\det \Sigma}} \theta(x\cdot w + b) \exp\left(-\frac{1}{2} (x-\mu)^T\Sigma^{-1}(x-\mu)\right).
+V(w, b, \mu, \Sigma) = \int_{\mathbb{R}^N} \frac{d^Nx}{(2\pi)^{-N/2}\sqrt{\det \Sigma}} \theta(x\cdot w + b) \exp\left(-\frac{1}{2} (x-\mu)^T\Sigma^{-1}(x-\mu)\right).
 $$
 
 The Heaviside Theta acts as a sort of indicator function, specifying which part of the domain $$\mathbb{R}^N$$ we are actually interested in, while the Gaussian part weights this portion by the appropriate amount.
@@ -45,13 +45,12 @@ $$
 \Theta(x+\alpha) = \int_{-\alpha}^{\infty} \frac{d\lambda}{2\pi} \int d\gamma \exp(i \gamma (\lambda - x)).
 $$
 
-Notice how this is a double integral; the one over $$\lambda$$ shows ???
 I like to think of this expression as a "stack of Dirac deltas" extending over the range where the argument of the Theta function is positive, that is, $$x\in(-\alpha, \infty)$$.
 
 The overall formula becomes
 
 $$
-V(w, b, \mu, \Sigma) = \int_{\mathbb{R}^N} \frac{d^nx}{(2\pi)^{-N/2}\sqrt{\det \Sigma}} \int_{-b}^{\infty} \frac{d\lambda}{2\pi} \int d\gamma \exp(i \gamma (\lambda - x\cdot w)) \exp\left(-\frac{1}{2} (x-\mu)^T\Sigma^{-1}(x-\mu)\right).
+V(w, b, \mu, \Sigma) = \int_{\mathbb{R}^N} \frac{d^Nx}{(2\pi)^{-N/2}\sqrt{\det \Sigma}} \int_{-b}^{\infty} \frac{d\lambda}{2\pi} \int d\gamma \exp(i \gamma (\lambda - x\cdot w)) \exp\left(-\frac{1}{2} (x-\mu)^T\Sigma^{-1}(x-\mu)\right).
 $$
 
 It is now just a matter of Gaussian integration.
