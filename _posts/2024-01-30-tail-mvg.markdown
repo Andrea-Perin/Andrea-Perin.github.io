@@ -1,0 +1,119 @@
+---
+layout: post
+title: a post with jupyter notebook
+date: 2024-01-30 18:38:46 +0200
+description: Tail function of a Multivariate Gaussian distribution
+tags: stats gaussian
+categories: random
+giscus_comments: true
+related_posts: true
+---
+
+As one often does, I was wondering what an $$N$$-dimensional generalisation of the Gaussian tail function is.
+
+### The result
+
+For a distribution $$\mathcal{N}(\mu, \Sigma)$$ and an affine hyperplane $$\{w, b\}$$, the portion of distribution to the right of the hyperplane is $$H\left(\frac{-b-w\cdot \mu}{\sqrt{w^T\Sigma w}}\right)$$.
+
+
+### Derivation
+
+The *tail function* of a Gaussian distribution $$\mathcal{N}(0, 1)$$ is defined as
+
+$$
+H(x) = \int_x^\infty \frac{ds}{\sqrt{2\pi}} \exp\left(-\frac{s^2}{2}\right),
+$$
+
+and it quantifies the volume of the distribution that lies to the right of the value $$x$$.
+
+
+Let us consider a hyperplane defined by $$w \in \mathbb{R}^N$$ and a bias value $$b\in\mathbb{R}$$.
+Together, they define an affine subspace that may be thought of as a separator.
+We are interested in how much of the multivariate Gaussian distribution $$\mathcal{N}(\mu, \Sigma)$$ lies on one side of this subspace.
+
+Let us call this quantity $$V$$, which we expect to be a function of the affine subspace $$\{w, b\}$$ as well as of the distribution parameters $$\{\mu, \Sigma\}$$.
+We can compute $$V$$ as follows:
+
+$$
+V(w, b, \mu, \Sigma) = \int_{\mathbb{R}^N} \frac{d^nx}{(2\pi)^{-N/2}\sqrt{\det \Sigma}} \theta(x\cdot w + b) \exp\left(-\frac{1}{2} (x-\mu)^T\Sigma^{-1}(x-\mu)\right).
+$$
+
+The Heaviside Theta acts as a sort of indicator function, specifying which part of the domain $$\mathbb{R}^N$$ we are actually interested in, while the Gaussian part weights this portion by the appropriate amount.
+Now, the trick is to consider the following expression for the Heaviside Theta:
+
+$$
+\Theta(x+\alpha) = \int_{-\alpha}^{\infty} \frac{d\lambda}{2\pi} \int d\gamma \exp(i \gamma (\lambda - x)).
+$$
+
+Notice how this is a double integral; the one over $$\lambda$$ shows ???
+I like to think of this expression as a "stack of Dirac deltas" extending over the range where the argument of the Theta function is positive, that is, $$x\in(-\alpha, \infty)$$.
+
+The overall formula becomes
+
+$$
+V(w, b, \mu, \Sigma) = \int_{\mathbb{R}^N} \frac{d^nx}{(2\pi)^{-N/2}\sqrt{\det \Sigma}} \int_{-b}^{\infty} \frac{d\lambda}{2\pi} \int d\gamma \exp(i \gamma (\lambda - x\cdot w)) \exp\left(-\frac{1}{2} (x-\mu)^T\Sigma^{-1}(x-\mu)\right).
+$$
+
+It is now just a matter of Gaussian integration.
+Starting first from the $$x$$, and changing integration variable to $$z = x-\mu$$, we obtain
+
+$$
+V(w, b, \mu, \Sigma) = \int_{-b}^{\infty} \frac{d\lambda}{2\pi} \int d\gamma \exp\left(-\frac{1}{2} \gamma^2 (w^T\Sigma w) + i \gamma (\lambda - w\cdot \mu)\right).
+$$
+
+Now we integrate over $$\gamma$$, obtaining
+
+$$
+V(w, b, \mu, \Sigma) = \int_{-b}^{\infty} \frac{d\lambda}{2\pi} \sqrt{\frac{2\pi}{w^T\Sigma w}} \exp\left(-\frac{1}{2}\left(\frac{\lambda - w\cdot \mu}{\sqrt{w^T\Sigma w}}\right)^2\right).
+$$
+
+Changing variable to $$s = \frac{\lambda - w\cdot \mu}{\sqrt{w^T\Sigma w}}$$, we obtain the formula
+
+$$
+V(w, b, \mu, \Sigma) = \int_{\frac{-b-w\cdot \mu}{\sqrt{w^T\Sigma w}}}^{\infty} \frac{ds}{\sqrt{2\pi}} \exp\left(-\frac{s^2}{2}\right) = H\left(\frac{-b-w\cdot \mu}{\sqrt{w^T\Sigma w}}\right),
+$$
+
+which is the final result.
+
+### Code check
+
+Here's a quick JAX-based implementation to check that the results make sense.
+
+{% highlight python %}
+"""Multivariate tail function"""
+from jax import numpy as jnp, random as jr
+from jax.scipy.special import erf
+
+
+def H(x):
+    return .5*(1-erf(x/jnp.sqrt(2)))
+
+
+N = int(1e5)
+D = 2  # dimension
+SEED = 126
+RNG = jr.PRNGKey(SEED)
+
+
+# define parameters of Gaussian
+RNG, cov_key, mean_key = jr.split(RNG, num=3)
+mean = jr.normal(mean_key, shape=(D,))
+precov = jr.normal(cov_key, shape=(D, D))
+cov = precov @ precov.T  # making sure the cov is (at least) PSD
+# define separator
+RNG, w_key = jr.split(RNG)
+(b, *w) = jr.normal(w_key, shape=(D+1,))
+w = jnp.array(w)
+
+
+# sample from this gaussian
+RNG, p_key = jr.split(RNG)
+points = jr.multivariate_normal(p_key, mean=mean, cov=cov, shape=(N, ))
+
+
+# experimental fraction
+emp = jnp.mean(points @ w + b > 0)
+theory = H((-b-w@mean)/jnp.sqrt(jnp.einsum('i,ij,j', w, cov, w)))
+print(f"Empirical: {emp}\nTheory: {theory}")
+
+{% endhighlight %}
