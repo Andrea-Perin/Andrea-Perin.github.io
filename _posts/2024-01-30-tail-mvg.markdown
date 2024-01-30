@@ -1,11 +1,11 @@
 ---
 layout: post
-title: a post with jupyter notebook
+title: Tail function of a Multivariate Gaussian distribution
 date: 2024-01-30 18:38:46 +0200
-description: Tail function of a Multivariate Gaussian distribution
+description: Splitting clouds
 tags: stats gaussian
 categories: random
-giscus_comments: true
+giscus_comments: false
 related_posts: true
 ---
 
