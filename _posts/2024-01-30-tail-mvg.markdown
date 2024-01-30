@@ -75,6 +75,10 @@ $$
 
 which is the final result.
 
+### Disclaimer
+
+There is probably a much cleaner derivation that makes use of affine transformations to turn a general $$\mathcal{N}(\mu, \Sigma)$$ Multivariate Gaussian into a more wieldy $$\mathcal{N}(0, \Sigma')$$.
+
 ### Code check
 
 Here's a quick JAX-based implementation to check that the results make sense.
