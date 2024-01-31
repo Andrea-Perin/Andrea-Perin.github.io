@@ -1,12 +1,11 @@
 ---
-layout: post
-title: Tail function of a Multivariate Gaussian distribution
-date: 2024-01-30 18:38:46 +0200
-description: Splitting clouds
-tags: stats gaussian
-categories: random
+layout: distill
+title: Tail function of the multivariate Gaussian distribution
+description: Or splitting clouds
+tags: stats
 giscus_comments: false
-related_posts: true
+date: 2024-01-30
+featured: false
 ---
 
 As one often does, I was wondering what an $$N$$-dimensional generalisation of the Gaussian tail function is.
