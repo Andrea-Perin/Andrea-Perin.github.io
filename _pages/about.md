@@ -23,8 +23,9 @@ Hi! I am Andrea, a PhD student at Aalto University, under the supervision of pro
 
 Research interests: 
 * symmetries and machine learning
-* information geometry
 * statistical mechanics
+* information geometry
+* diffusion models
 * geometric ML
 
 Feel free (or even compelled) to get in touch!
