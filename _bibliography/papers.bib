@@ -1,8 +1,18 @@
 ---
 ---
+@misc{perin2024abilitydeepnetworkslearn,
+      title={On the Ability of Deep Networks to Learn Symmetries from Data: A Neural Kernel Theory},
+      author={Andrea Perin and Stephane Deny},
+      year={2024},
+      eprint={2412.11521},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2412.11521},
+      abstract={Symmetries (transformations by group actions) are present in many datasets, and leveraging them holds significant promise for improving predictions in machine learning. In this work, we aim to understand when and how deep networks can learn symmetries from data. We focus on a supervised classification paradigm where data symmetries are only partially observed during training: some classes include all transformations of a cyclic group, while others include only a subset. We ask: can deep networks generalize symmetry invariance to the partially sampled classes? In the infinite-width limit, where kernel analogies apply, we derive a neural kernel theory of symmetry learning to address this question. The group-cyclic nature of the dataset allows us to analyze the spectrum of neural kernels in the Fourier domain; here we find a simple characterization of the generalization error as a function of the interaction between class separation (signal) and class-orbit density (noise). We observe that generalization can only be successful when the local structure of the data prevails over its non-local, symmetric, structure, in the kernel space defined by the architecture. This occurs when (1) classes are sufficiently distinct and (2) class orbits are sufficiently dense. Our framework also applies to equivariant architectures (e.g., CNNs), and recovers their success in the special case where the architecture matches the inherent symmetry of the data. Empirically, our theory reproduces the generalization failure of finite-width networks (MLP, CNN, ViT) trained on partially observed versions of rotated-MNIST. We conclude that conventional networks trained with supervision lack a mechanism to learn symmetries that have not been explicitly embedded in their architecture a priori. Our framework could be extended to guide the design of architectures and training procedures able to learn symmetries from data.}
+}
 
 @article{spiegl2024viewfusion,
-      title={ViewFusion: Learning Composable Diffusion Models for Novel View Synthesis}, 
+      title={ViewFusion: Learning Composable Diffusion Models for Novel View Synthesis},
       author={Bernard Spiegl and Andrea Perin and Stéphane Deny and Alexander Ilin},
       year={2024},
       eprint={2402.02906},
@@ -13,10 +23,10 @@
 }
 
 @article{ollikka2024unusualposes,
-      title={Humans Beat Deep Networks at Recognizing Objects in Unusual Poses, Given Enough Time}, 
+      title={Humans Beat Deep Networks at Recognizing Objects in Unusual Poses, Given Enough Time},
       author={Netta Ollikka and Amro Abbas and Andrea Perin and Markku Kilpeläinen and Stephane Deny},
       year={2024},
-      archivePrefix={PsyArXiv},
-      url={https://osf.io/preprints/psyarxiv/z95t7},
+      archivePrefix={arXiv},
+      url={http://arxiv.org/abs/2402.03973},
       abstract={Deep learning is closing the gap with humans on several object recognition benchmarks. Here we investigate this gap in the context of challenging images where objects are seen from unusual viewpoints. We find that humans excel at recognizing objects in unusual poses, in contrast with state-of-the-art pretrained networks (EfficientNet, SWAG, ViT, SWIN, BEiT, ConvNext) which are systematically brittle in this condition. Remarkably, as we limit image exposure time, human performance degrades to the level of deep networks, suggesting that additional mental processes (requiring additional time) take place when humans identify objects in unusual poses. Finally, our analysis of error patterns of humans vs. networks reveals that even time-limited humans are dissimilar to feed-forward deep networks. We conclude that more work is needed to bring computer vision systems to the level of robustness of the human visual system. Understanding the nature of the mental processes taking place during extra viewing time may be key to attain such robustness.  },
 }
