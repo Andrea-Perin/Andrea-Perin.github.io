@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: Riemannian distance for SPD circulant matrices
-description: Or slicing conees
+description: Or slicing cones
 tags: maths
 giscus_comments: false
 date: 2024-12-19
@@ -17,7 +17,7 @@ I was left wondering: where do *circulant matrices* live in all of this?
 ## Preliminaries
 Some context.
 
-##### SPD matrices
+#### SPD matrices
 If you end up on this page, I take it for granted you know what a symmetric matrix is.
 As for the Positive Definite part, the way I think about them is like a "stretching" operator: feed it any vector, and this thing will:
 1. rotate it to "align it" to an orthogonal basis;
@@ -28,33 +28,210 @@ Importantly, an positive definite matrix has strictly positive determinant.
 More info is [on Wikipedia](https://en.wikipedia.org/wiki/Definite_matrix), of course.
 
 You may find SPD matrices in the following contexts:
-* as *covariance matrices*;
+* as *covariance matrices* (if it is a *sample* covariance, you may need "enough" samples, so that it is not rank deficient);
 * as *metric tensors*, once you specify some coordinate system;
-* as *sample covariance matrices*, as long as there are "enough samples";
 * as *Gram matrices*, in the context of kernel methods;
 * and, I assume, many more.
 
-##### The manifold of SPD matrices
+#### The manifold of SPD matrices
 Imagine an $n\times n$ matrix $\cal M$ that is symmetric and positive definite.
 Due to its symmetry, you only actually need to specify $n(n+1)/2$ elements to characterize the matrix.
 You can then think of this matrix as a point in the space $\mathbb{R}^{n(n+1)/2}$.
-The set of all such points that correspond to a symmetric positive definite matrix form a *manifold*.
-It is possible to endow this manifold with a *metric*, that is, a way to "measure distance" between two of its points.
-A careful discussion of this is a bit outside of my capabilities, but resources are plentiful if you crave some big boy maths.
+The set of all such points that correspond to a symmetric positive definite matrix forms a *manifold*.
+It is possible to endow this manifold with a *metric*, that is, a way to "measure distance" between two of its points, thus creating a *Riemannian manifold*.
+We call this manifold $\cal S_{++}^n$.
+
+A careful discussion of Riemannian manifolds is a bit outside of my capabilities, but resources are plentiful if you crave some big boy maths.
 
 It is instructive and amusing to check what this manifold may look like in practice.
 Choose $n=2$, so that matrices (which are symmetric!) are of the type
+
 $$
 \cal M = \begin{pmatrix}
-    a & c \\
-    c & b
+    x & z \\
+    z & y
     \end{pmatrix}.
 $$
-Additionally, we need to satisfy the requirements $\det \cal M = ab - c^2 >0$, and $a>0, b>0$ (this is because of the positive-definiteness requirement).
-The matrix $\cal M$ can be represented as the point $(a, b, c)\in \mathbb{R}^3$.
-The manifold is then the subset of $\mathbb{R}^3$ which satisfies these requirements:
-* $ab -c^2>0$;
-* $a>0$;
-* $b>0$.
 
-Feed this to `matplotlib`, and you get this: ![The convex cone structure for a 2D SPD matrix.](/assets/img/posts/circulant_distance/cone.png)
+Additionally, we need to satisfy the requirements $\det \cal M = xy - z^2 >0$, and $x>0, y>0$ (this is because of the positive-definiteness requirement).
+The matrix $\cal M$ can be represented as the point $(x, y, z)\in \mathbb{R}^3$.
+The manifold is then the subset of $\mathbb{R}^3$ which satisfies these requirements:
+* $xy -z^2>0$;
+* $x>0$;
+* $y>0$.
+
+Feed this to `matplotlib`, and you get this:
+<div class="row mt-3 justify-content-center">
+    <div class="col-8 mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/posts/circulant_distance/cone.png" alt="The convex cone structure for a 2D SPD matrix.">
+    </div>
+</div>
+<div class="caption">
+    The convex cone structure for a 2D SPD matrix.
+</div>
+
+This really looks like a *geometric* cone, and it also happens to be an [*algebraic* cone](https://en.wikipedia.org/wiki/Convex_cone).
+
+#### Distance between SPD matrices
+One can define a notion of distance between two SPD matrices $P, Q \in \cal S_{++}^n$, as done in [this paper](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf):
+The formula looks like this:
+
+$$
+d(P, Q) = \sqrt{\sum_{i=1}^n \ln^2 \lambda_i(P, Q)},
+$$
+where $\lambda_i(P, Q)$ denotes the $i$-th eigenvalue that can be obtained by solving the equation
+
+$$
+\det(\lambda P - Q) = 0.
+$$
+
+
+#### Geodesics
+Similarly, we can define a *geodesic* between two SPD matrices, $P, Q \in \cal S_{++}^n$, with the following formula:
+
+$$
+\gamma(t) = P^{1/2}(P^{-1/2)QP^{-1/2})^tP^{1/2}, \quad t\in[0,1].
+$$
+
+For any $t\in[0, 1]$, $\gamma(t)$ is an SPD matrix.
+Here is some `JAX` code to get this geodesic:
+
+
+{% highlight python %}
+import jax
+from jax import numpy as jnp
+from typing import Callable
+
+
+def get_geodesic(P: jax.Array, Q: jax.Array) -> Callable:
+    Op, Sp, OpT = jnp.linalg.svd(P, hermitian=True)
+    Phalf = (Op * jnp.sqrt(Sp)) @ OpT
+    Pmhalf = (Op * (1/jnp.sqrt(Sp))) @ OpT
+    pow = Pmhalf @ Q @ Pmhalf
+    Opow, Spow, OpowT = jnp.linalg.svd(pow, hermitian=True)
+    def gamma(t: float) -> jax.Array:
+        return Phalf @ ((Opow * (Spow**t)) @ OpowT) @ Phalf
+    return gamma
+
+
+# example usage
+P1 = jnp.array([ [3, 1], [1, 4]] )
+Q1 = jnp.array([ [1, 0], [0, 1]] )
+gamma = get_geodesic(P1, Q1)
+times = jnp.linspace(0, 1, 100)
+path = vmap(gamma)(times)
+{% endhighlight %}
+
+Using this code and a bit of 3D plotting, we get this gif, showing a few geodesics in the $\cal S_{++}^2$ manifold.
+
+<div class="row mt-3 justify-content-center">
+    <div class="col-8 mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/posts/circulant_distance/geodesic.gif" alt="Geodesics in the SPD manifold.">
+    </div>
+</div>
+<div class="caption">
+    A few geodesics in the $\cal S_{++}^2$ manifold.
+</div>
+
+#### Circulant matrices
+Now, let's move to [circulant matrices](https://en.wikipedia.org/wiki/Circulant_matrix) that also happen to be SPD.
+
+Let us start from the case $n=2$.
+A 2 by 2, positive definite circulant matrix can be written as
+
+$$
+\cal M = \begin{pmatrix}
+    x & z \\
+    z & x
+\end{pmatrix},
+$$
+
+with $x>0$ and $|z| < x$.
+This is a manifold, too!
+I will call it $\cal C_{++}^2$; this is a 2D manifold (one fewer dimension than $\cal S_{++}^2$).
+Specifically, it can be visualized as a slice of the cone above, obtained by intersecting it with the plane $x=y$.
+This is, again, a cone (at least algebraically speaking; I guess it is also geometrically a 2D cone).
+We can now visualize the geodesics between circulant matrices on a 2D plane.
+
+<div class="row mt-3 justify-content-center">
+    <div class="col-8 mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/posts/circulant_distance/cone.png" alt="Geodesics in the circulant cone.">
+    </div>
+</div>
+<div class="caption">
+    A few geodesics in the $\cal C_{++}^2$ manifold.
+</div>
+
+#### Geodesic formula for $\cal C_{++}^n$
+
+We can take the geodesic formula for $\cal S_{++}^n$ and specialize it to the submanifold $\C_{++}^n$.
+Consider $P, Q \in \cal C_{++}^n$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $\cal F$:
+
+$$
+P = \cal F \Lambda_P \cal F^{-1}, \quad
+Q = \cal F \Lambda_Q \cal F^{-1}.
+$$
+
+Then, we get an easier expression for $\gamma: [0, 1] \to \cal C_{++}^n$:
+
+$$
+\gamma(t) = \cal F \frac{\Lambda_Q^t}{\Lambda_P^{t-1}} \cal F^{-1},
+$$
+
+where the ratio and the power operation are understood to happen elementwise.
+As a sanity check, we see that $\gamma(0) = P$ and $\gamma(1) = Q$, as expected.
+The code for this geodesic is a tiny bit cleaner, as well:
+
+{% highlight python %}
+import jax
+from jax import numpy as jnp, vmap
+from typing import Callable
+
+
+def get_circ_geodesic(P: jax.Array, Q: jax.Array) -> Callable:
+    lp = jnp.fft.rfft(P)
+    lq = jnp.fft.rfft(Q)
+    def gamma(t: float) -> jax.Array:
+        return jnp.fft.irfft(lp**t / lq**(t-1))
+    return gamma
+
+
+# example usage
+P1 = jnp.array([ [3, 1], [1, 3]] )
+Q1 = jnp.array([ [1, 0], [0, 1]] )
+gamma = get_geodesic(P1, Q1)
+times = jnp.linspace(0, 1, 100)
+path = vmap(gamma)(times)
+{% endhighlight %}
+
+
+#### Distances
+
+What about the distance between two circulant matrices?
+Again, we can just take the definition of distance that holds for generic SPD matrices, and use the properties of circulant matrices.
+We get
+
+$$
+d(P, Q) = |\ln (\Lambda_P\cdot \lambda_Q^{-1})|,
+$$
+where $\Lambda_P, \Lambda_Q$ are the vectorized spectra of the matrices $P, Q$ (in other words, their DFT).
+
+TODO: find analogies in signal processing maybe?
+
+
+#### Open questions
+
+I have one question left at the moment (hopefully, more will arise).
+The question is: given a matrix $P\in\cal S_{++}^n$, what is the *closest* matrix $Q\in \cal C_{++}^n$?
+The idea has something to do with [our recent paper](https://arxiv.org/abs/2412.11521), where we use an *ex-post* circularization procedure on Gram matrices.
+This circularization happens by simply averaging the diagonals of the Gram matrix.
+At first glance, it seems like there is no other way to make a matrix circulant that would make much sense.
+So it would be nice to see if it just so happens that this diagonal-averaged matrix is the "orthogonal projection" of an SPD matrix onto the submanifold of circulant SPD matrices.
+A possible plan of attack would be to minimize the length between an arbitrary SPD matrix $P$ and a target circulant SPD matrix $Q$.
+I will maybe do that in the next days.
+
+### References
+
+A list of references:
+* a definition of distance between PSD matrices: [http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf)
+* our recent paper: [https://arxiv.org/abs/2412.11521](https://arxiv.org/abs/2412.11521)
