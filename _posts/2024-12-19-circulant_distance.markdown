@@ -31,17 +31,17 @@ You may find SPD matrices in the following contexts:
 * and, I assume, many more.
 
 ### The manifold of SPD matrices
-Imagine an $n\times n$ matrix $\mathcal{M}$ that is symmetric and positive definite.
-Due to its symmetry, you only actually need to specify $n(n+1)/2$ elements to characterize the matrix.
-You can then think of this matrix as a point in the space $\mathbb{R}^{n(n+1)/2}$.
+Imagine an $n\times n$ matrix $$\mathcal{M}$$ that is symmetric and positive definite.
+Due to its symmetry, you only actually need to specify $$n(n+1)/2$$ elements to characterize the matrix.
+You can then think of this matrix as a point in the space $$\mathbb{R}^{n(n+1)/2}$$.
 The set of all such points that correspond to a symmetric positive definite matrix forms a *manifold*.
 It is possible to endow this manifold with a *metric*, that is, a way to "measure distance" between two of its points, thus creating a *Riemannian manifold*.
-We call this manifold $\mathcal{S}_{++}^n$.
+We call this manifold $$\mathcal{S}_{++}^n$$.
 
 A careful discussion of Riemannian manifolds is a bit outside of my capabilities, but resources are plentiful if you crave some big boy maths.
 
 It is instructive and amusing to check what this manifold may look like in practice.
-Choose $n=2$, so that matrices (which are symmetric!) are of the type
+Choose $$n=2$$, so that matrices (which are symmetric!) are of the type
 
 $$
 \mathcal{M} = \begin{pmatrix}
@@ -50,12 +50,19 @@ $$
     \end{pmatrix}.
 $$
 
-Additionally, we need to satisfy the requirements $\det \mathcal{M} = xy - z^2 >0$, and $x>0, y>0$ (this is because of the positive-definiteness requirement).
-The matrix $\mathcal{M}$ can be represented as the point $(x, y, z)\in \mathbb{R}^3$.
-The manifold is then the subset of $\mathbb{R}^3$ which satisfies these requirements:
-* $xy -z^2>0$;
-* $x>0$;
-* $y>0$.
+Additionally, we need to satisfy the requirements
+
+$$
+\det \mathcal{M} = xy - z^2 >0, \quad x>0, \quad y>0.
+$$
+
+These are needed for the positive-definiteness requirement.
+The matrix $$\mathcal{M}$$ above can be represented as the point $$(x, y, z)\in \mathbb{R}^3$$.
+We can think of the manifold as the following subset of $$\mathbb{R}^3$$:
+
+$$
+\mathcal{S}_{++}^2 = \{(x, y, z) \in \mathbb{R}^3 | xy-z^2>0, x>0, y>0\}.
+$$
 
 Feed this to `matplotlib`, and you get this:
 <div class="row mt-3 justify-content-center">
@@ -70,27 +77,27 @@ Feed this to `matplotlib`, and you get this:
 This really looks like a *geometric* cone, and it also happens to be an [*algebraic* cone](https://en.wikipedia.org/wiki/Convex_cone).
 
 ### Distance between SPD matrices
-One can define a notion of distance between two SPD matrices $P, Q \in \mathcal{S}_{++}^n$, as done in [this paper](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf):
+One can define a notion of distance between two SPD matrices $$P, Q \in \mathcal{S}_{++}^n$$, as done in [this paper](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf):
 The formula looks like this:
 
 $$
 d(P, Q) = \sqrt{\sum_{i=1}^n \ln^2 \lambda_i(P, Q)},
 $$
 
-where $\lambda_i(P, Q)$ denotes the $i$-th eigenvalue that can be obtained by solving the equation
+where $$\lambda_i(P, Q)$$ denotes the $$i$$-th eigenvalue that can be obtained by solving the equation
 
 $$
 \det(\lambda P - Q) = 0.
 $$
 
 #### Geodesics
-Similarly, we can define a *geodesic* between two SPD matrices, $P, Q \in \mathcal{S}_{++}^n$, with the following formula:
+Similarly, we can define a *geodesic* between two SPD matrices, $$P, Q \in \mathcal{S}_{++}^n$$, with the following formula:
 
 $$
 \gamma(t) = P^{1/2}(P^{-1/2}QP^{-1/2})^tP^{1/2}, \quad t\in[0,1].
 $$
 
-For any $t\in[0, 1]$, $\gamma(t)$ is an SPD matrix.
+For any $$t\in[0, 1]$$, $$\gamma(t)$$ is an SPD matrix.
 Here is some `JAX` code to get this geodesic:
 
 
@@ -119,7 +126,7 @@ times = jnp.linspace(0, 1, 100)
 path = vmap(gamma)(times)
 {% endhighlight %}
 
-Using this code and a bit of 3D plotting, we get this gif, showing a few geodesics in the $\mathcal{S}_{++}^2$ manifold.
+Using this code and a bit of 3D plotting, we get this gif, showing a few geodesics in the $$\mathcal{S}_{++}^2$$ manifold.
 
 <div class="row mt-3 justify-content-center">
     <div class="col-8 mt-3 mt-md-0">
@@ -127,13 +134,13 @@ Using this code and a bit of 3D plotting, we get this gif, showing a few geodesi
     </div>
 </div>
 <div class="caption">
-    A few geodesics in the $\mathcal{S}_{++}^2$ manifold.
+    A few geodesics in the $$\mathcal{S}_{++}^2$$ manifold.
 </div>
 
 ### Circulant matrices
 Now, let's move to [circulant matrices](https://en.wikipedia.org/wiki/Circulant_matrix) that also happen to be SPD.
 
-Let us start from the case $n=2$.
+Let us start from the case $$n=2$$.
 A 2 by 2, positive definite circulant matrix can be written as
 
 $$
@@ -143,10 +150,9 @@ $$
 \end{pmatrix},
 $$
 
-with $x>0$ and $|z| < x$.
+with $$x>0$$ and $$|z| < x$$.
 This is a manifold, too!
-I will call it $\mathcal{C}_{++}^2$.
-This is a 2D manifold (one fewer dimension than $\mathcal{S}_{++}^2$).
+I will call it $$\mathcal{C}_{++}^2$$; this is a 2D manifold (one fewer dimension than $$\mathcal{S}_{++}^2$$).
 Specifically, it can be visualized as a slice of the cone above, obtained by intersecting it with the plane $x=y$.
 This is, again, a cone (at least algebraically speaking; I guess it is also geometrically a 2D cone).
 We can now visualize the geodesics between circulant matrices on a 2D plane.
@@ -157,27 +163,27 @@ We can now visualize the geodesics between circulant matrices on a 2D plane.
     </div>
 </div>
 <div class="caption">
-    A few geodesics in the $\mathcal{C}_{++}^2$ manifold.
+    A few geodesics in the $$\mathcal{C}_{++}^2$$ manifold.
 </div>
 
-### Geodesic formula for $\mathcal{C}_{++}^n$
+### Geodesic formula for $$\mathcal{C}_{++}^n$$
 
-We can just reuse the geodesic formula for $\mathcal{S}_{++}^n$ and specialize it to the submanifold of circulant matrices.
-Consider $P, Q \in \mathcal{C}_{++}^n$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $\mathcal{F}$:
+We can just reuse the geodesic formula for $$\mathcal{S}_{++}^n$$ and specialize it to the submanifold of circulant matrices.
+Consider $$P, Q \in \mathcal{C}_{++}^n$$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $$\mathcal{F}$$:
 
 $$
 P = \mathcal{F} \Lambda_P \mathcal{F}^{-1}, \quad
 Q = \mathcal{F} \Lambda_Q \mathcal{F}^{-1}.
 $$
 
-Then, we get an easier expression for $\gamma: [0, 1] \to \mathcal{C}_{++}^n$:
+Then, we get an easier expression for $$\gamma: [0, 1] \to \mathcal{C}_{++}^n$$:
 
 $$
 \gamma(t) = \mathcal{F} \frac{\Lambda_Q^t}{\Lambda_P^{t-1}} \mathcal{F}^{-1},
 $$
 
 where the ratio and the power operation are understood to happen elementwise.
-As a sanity check, we see that $\gamma(0) = P$ and $\gamma(1) = Q$, as expected.
+As a sanity check, we see that $$\gamma(0) = P$$ and $$\gamma(1) = Q$$, as expected.
 The code for this geodesic is a tiny bit cleaner, as well:
 
 {% highlight python %}
@@ -213,7 +219,7 @@ $$
 d(P, Q) = |\ln (\Lambda_P\cdot \Lambda_Q^{-1})|,
 $$
 
-where $\Lambda_P, \Lambda_Q$ are the vectorized spectra of the matrices $P, Q$ (in other words, their DFT).
+where $$\Lambda_P, \Lambda_Q$$ are the vectorized spectra of the matrices $$P, Q$$ (in other words, their DFT).
 
 TODO: find analogies in signal processing maybe?
 
@@ -221,13 +227,12 @@ TODO: find analogies in signal processing maybe?
 ### Open questions
 
 I have one question left at the moment (hopefully, more will arise).
-The question is: take a matrix $P \in \mathcal{S}_{++}^n$.
-What is the *closest* matrix $Q \in \mathcal{C}_{++}^n$?
+The question is: take a matrix $$P \in \mathcal{S}_{++}^n$$; what is the *closest* matrix $$Q \in \mathcal{C}_{++}^n$$?
 The idea has something to do with [our recent paper](https://arxiv.org/abs/2412.11521), where we use an *ex-post* circularization procedure on Gram matrices.
 This circularization happens by simply averaging the diagonals of the Gram matrix.
 At first glance, it seems like there is no other way to make a matrix circulant that would make much sense.
 So it would be nice to see if it just so happens that this diagonal-averaged matrix is the "orthogonal projection" of an SPD matrix onto the submanifold of circulant SPD matrices.
-A possible plan of attack would be to minimize the length between an arbitrary SPD matrix $P$ and a target circulant SPD matrix $Q$.
+A possible plan of attack would be to minimize the length between an arbitrary SPD matrix $P$ and a target circulant SPD matrix $$Q$$.
 I will maybe do that in the next days.
 
 ### References
