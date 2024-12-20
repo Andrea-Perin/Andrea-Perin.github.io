@@ -145,7 +145,8 @@ $$
 
 with $x>0$ and $|z| < x$.
 This is a manifold, too!
-I will call it $\mathcal{C}\_{++}^2$; this is a 2D manifold (one fewer dimension than $\mathcal{S}\_{++}^2$).
+I will call it $\mathcal{C}_{++}^2$.
+This is a 2D manifold (one fewer dimension than $\mathcal{S}_{++}^2$).
 Specifically, it can be visualized as a slice of the cone above, obtained by intersecting it with the plane $x=y$.
 This is, again, a cone (at least algebraically speaking; I guess it is also geometrically a 2D cone).
 We can now visualize the geodesics between circulant matrices on a 2D plane.
@@ -161,7 +162,7 @@ We can now visualize the geodesics between circulant matrices on a 2D plane.
 
 ### Geodesic formula for $\mathcal{C}_{++}^n$
 
-We can take the geodesic formula for $\mathcal{S}\_{++}^n$ and specialize it to the submanifold $\mathcal{C}\_{++}^n$.
+We can just reuse the geodesic formula for $\mathcal{S}_{++}^n$ and specialize it to the submanifold of circulant matrices.
 Consider $P, Q \in \mathcal{C}_{++}^n$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $\mathcal{F}$:
 
 $$
@@ -220,7 +221,8 @@ TODO: find analogies in signal processing maybe?
 ### Open questions
 
 I have one question left at the moment (hopefully, more will arise).
-The question is: given a matrix $P\in\mathcal{S}\_{++}^n$, what is the *closest* matrix $Q\in \mathcal{C}\_{++}^n$?
+The question is: take a matrix $P \in \mathcal{S}_{++}^n$.
+What is the *closest* matrix $Q \in \mathcal{C}_{++}^n$?
 The idea has something to do with [our recent paper](https://arxiv.org/abs/2412.11521), where we use an *ex-post* circularization procedure on Gram matrices.
 This circularization happens by simply averaging the diagonals of the Gram matrix.
 At first glance, it seems like there is no other way to make a matrix circulant that would make much sense.
