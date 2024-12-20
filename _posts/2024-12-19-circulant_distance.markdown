@@ -31,7 +31,7 @@ You may find SPD matrices in the following contexts:
 * and, I assume, many more.
 
 ### The manifold of SPD matrices
-Imagine an $n\times n$ matrix $$\mathcal{M}$$ that is symmetric and positive definite.
+Imagine an $$n\times n$$ matrix $$\mathcal{M}$$ that is symmetric and positive definite.
 Due to its symmetry, you only actually need to specify $$n(n+1)/2$$ elements to characterize the matrix.
 You can then think of this matrix as a point in the space $$\mathbb{R}^{n(n+1)/2}$$.
 The set of all such points that correspond to a symmetric positive definite matrix forms a *manifold*.
@@ -240,3 +240,4 @@ I will maybe do that in the next days.
 A list of references:
 * a definition of distance between SPD matrices: [http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf)
 * our recent paper: [https://arxiv.org/abs/2412.11521](https://arxiv.org/abs/2412.11521)
+* the code for generating the plots can be found [here](https://gist.github.com/Andrea-Perin/1f268c1655db3cc848474375012f4496)
