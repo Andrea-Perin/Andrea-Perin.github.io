@@ -31,12 +31,12 @@ You may find SPD matrices in the following contexts:
 * and, I assume, many more.
 
 ### The manifold of SPD matrices
-Imagine an $n\times n$ matrix $\cal M$ that is symmetric and positive definite.
+Imagine an $n\times n$ matrix $\mathcal{M}$ that is symmetric and positive definite.
 Due to its symmetry, you only actually need to specify $n(n+1)/2$ elements to characterize the matrix.
 You can then think of this matrix as a point in the space $\mathbb{R}^{n(n+1)/2}$.
 The set of all such points that correspond to a symmetric positive definite matrix forms a *manifold*.
 It is possible to endow this manifold with a *metric*, that is, a way to "measure distance" between two of its points, thus creating a *Riemannian manifold*.
-We call this manifold $\cal S_{++}^n$.
+We call this manifold $\mathcal{S}_{++}^n$.
 
 A careful discussion of Riemannian manifolds is a bit outside of my capabilities, but resources are plentiful if you crave some big boy maths.
 
@@ -44,14 +44,14 @@ It is instructive and amusing to check what this manifold may look like in pract
 Choose $n=2$, so that matrices (which are symmetric!) are of the type
 
 $$
-\cal M = \begin{pmatrix}
+\mathcal{M} = \begin{pmatrix}
     x & z \\
     z & y
     \end{pmatrix}.
 $$
 
-Additionally, we need to satisfy the requirements $\det \cal M = xy - z^2 >0$, and $x>0, y>0$ (this is because of the positive-definiteness requirement).
-The matrix $\cal M$ can be represented as the point $(x, y, z)\in \mathbb{R}^3$.
+Additionally, we need to satisfy the requirements $\det \mathcal{M} = xy - z^2 >0$, and $x>0, y>0$ (this is because of the positive-definiteness requirement).
+The matrix $\mathcal{M}$ can be represented as the point $(x, y, z)\in \mathbb{R}^3$.
 The manifold is then the subset of $\mathbb{R}^3$ which satisfies these requirements:
 * $xy -z^2>0$;
 * $x>0$;
@@ -70,7 +70,7 @@ Feed this to `matplotlib`, and you get this:
 This really looks like a *geometric* cone, and it also happens to be an [*algebraic* cone](https://en.wikipedia.org/wiki/Convex_cone).
 
 ### Distance between SPD matrices
-One can define a notion of distance between two SPD matrices $P, Q \in \cal S_{++}^n$, as done in [this paper](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf):
+One can define a notion of distance between two SPD matrices $P, Q \in \mathcal{S}_{++}^n$, as done in [this paper](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf):
 The formula looks like this:
 
 $$
@@ -84,7 +84,7 @@ $$
 $$
 
 #### Geodesics
-Similarly, we can define a *geodesic* between two SPD matrices, $P, Q \in \cal S_{++}^n$, with the following formula:
+Similarly, we can define a *geodesic* between two SPD matrices, $P, Q \in \mathcal{S}_{++}^n$, with the following formula:
 
 $$
 \gamma(t) = P^{1/2}(P^{-1/2}QP^{-1/2})^tP^{1/2}, \quad t\in[0,1].
@@ -119,7 +119,7 @@ times = jnp.linspace(0, 1, 100)
 path = vmap(gamma)(times)
 {% endhighlight %}
 
-Using this code and a bit of 3D plotting, we get this gif, showing a few geodesics in the $\cal S_{++}^2$ manifold.
+Using this code and a bit of 3D plotting, we get this gif, showing a few geodesics in the $\mathcal{S}_{++}^2$ manifold.
 
 <div class="row mt-3 justify-content-center">
     <div class="col-8 mt-3 mt-md-0">
@@ -127,7 +127,7 @@ Using this code and a bit of 3D plotting, we get this gif, showing a few geodesi
     </div>
 </div>
 <div class="caption">
-    A few geodesics in the $\cal S_{++}^2$ manifold.
+    A few geodesics in the $\mathcal{S}_{++}^2$ manifold.
 </div>
 
 ### Circulant matrices
@@ -137,7 +137,7 @@ Let us start from the case $n=2$.
 A 2 by 2, positive definite circulant matrix can be written as
 
 $$
-\cal M = \begin{pmatrix}
+\mathcal{M} = \begin{pmatrix}
     x & z \\
     z & x
 \end{pmatrix},
@@ -145,7 +145,7 @@ $$
 
 with $x>0$ and $|z| < x$.
 This is a manifold, too!
-I will call it $\cal C_{++}^2$; this is a 2D manifold (one fewer dimension than $\cal S_{++}^2$).
+I will call it $\mathcal{C}_{++}^2$; this is a 2D manifold (one fewer dimension than $\mathcal{S}_{++}^2$).
 Specifically, it can be visualized as a slice of the cone above, obtained by intersecting it with the plane $x=y$.
 This is, again, a cone (at least algebraically speaking; I guess it is also geometrically a 2D cone).
 We can now visualize the geodesics between circulant matrices on a 2D plane.
@@ -156,20 +156,20 @@ We can now visualize the geodesics between circulant matrices on a 2D plane.
     </div>
 </div>
 <div class="caption">
-    A few geodesics in the $\cal C_{++}^2$ manifold.
+    A few geodesics in the $\mathcal{C}_{++}^2$ manifold.
 </div>
 
-### Geodesic formula for $\cal C_{++}^n$
+### Geodesic formula for $\mathcal{C}_{++}^n$
 
-We can take the geodesic formula for $\cal S_{++}^n$ and specialize it to the submanifold $\C_{++}^n$.
-Consider $P, Q \in \cal C_{++}^n$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $\cal F$:
+We can take the geodesic formula for $\mathcal{S}_{++}^n$ and specialize it to the submanifold $\mathcal{C}_{++}^n$.
+Consider $P, Q \in \mathcal{C}_{++}^n$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $\cal F$:
 
 $$
 P = \cal F \Lambda_P \cal F^{-1}, \quad
 Q = \cal F \Lambda_Q \cal F^{-1}.
 $$
 
-Then, we get an easier expression for $\gamma: [0, 1] \to \cal C_{++}^n$:
+Then, we get an easier expression for $\gamma: [0, 1] \to \mathcal{C}_{++}^n$:
 
 $$
 \gamma(t) = \cal F \frac{\Lambda_Q^t}{\Lambda_P^{t-1}} \cal F^{-1},
@@ -220,7 +220,7 @@ TODO: find analogies in signal processing maybe?
 ### Open questions
 
 I have one question left at the moment (hopefully, more will arise).
-The question is: given a matrix $P\in\cal S_{++}^n$, what is the *closest* matrix $Q\in \cal C_{++}^n$?
+The question is: given a matrix $P\in\mathcal{S}_{++}^n$, what is the *closest* matrix $Q\in \mathcal{C}_{++}^n$?
 The idea has something to do with [our recent paper](https://arxiv.org/abs/2412.11521), where we use an *ex-post* circularization procedure on Gram matrices.
 This circularization happens by simply averaging the diagonals of the Gram matrix.
 At first glance, it seems like there is no other way to make a matrix circulant that would make much sense.
