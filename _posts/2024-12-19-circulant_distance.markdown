@@ -14,10 +14,7 @@ The exercise had us thinking about a notion of distance for this manifold.
 It also was presenting it as an example of the algebraic concept of a [convex cone](https://en.wikipedia.org/wiki/Convex_cone).
 I was left wondering: where do *circulant matrices* live in all of this?
 
-## Preliminaries
-Some context.
-
-#### SPD matrices
+### SPD matrices
 If you end up on this page, I take it for granted you know what a symmetric matrix is.
 As for the Positive Definite part, the way I think about them is like a "stretching" operator: feed it any vector, and this thing will:
 1. rotate it to "align it" to an orthogonal basis;
@@ -33,7 +30,7 @@ You may find SPD matrices in the following contexts:
 * as *Gram matrices*, in the context of kernel methods;
 * and, I assume, many more.
 
-#### The manifold of SPD matrices
+### The manifold of SPD matrices
 Imagine an $n\times n$ matrix $\cal M$ that is symmetric and positive definite.
 Due to its symmetry, you only actually need to specify $n(n+1)/2$ elements to characterize the matrix.
 You can then think of this matrix as a point in the space $\mathbb{R}^{n(n+1)/2}$.
@@ -72,25 +69,25 @@ Feed this to `matplotlib`, and you get this:
 
 This really looks like a *geometric* cone, and it also happens to be an [*algebraic* cone](https://en.wikipedia.org/wiki/Convex_cone).
 
-#### Distance between SPD matrices
+### Distance between SPD matrices
 One can define a notion of distance between two SPD matrices $P, Q \in \cal S_{++}^n$, as done in [this paper](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf):
 The formula looks like this:
 
 $$
 d(P, Q) = \sqrt{\sum_{i=1}^n \ln^2 \lambda_i(P, Q)},
 $$
+
 where $\lambda_i(P, Q)$ denotes the $i$-th eigenvalue that can be obtained by solving the equation
 
 $$
 \det(\lambda P - Q) = 0.
 $$
 
-
 #### Geodesics
 Similarly, we can define a *geodesic* between two SPD matrices, $P, Q \in \cal S_{++}^n$, with the following formula:
 
 $$
-\gamma(t) = P^{1/2}(P^{-1/2)QP^{-1/2})^tP^{1/2}, \quad t\in[0,1].
+\gamma(t) = P^{1/2}(P^{-1/2}QP^{-1/2})^tP^{1/2}, \quad t\in[0,1].
 $$
 
 For any $t\in[0, 1]$, $\gamma(t)$ is an SPD matrix.
@@ -133,7 +130,7 @@ Using this code and a bit of 3D plotting, we get this gif, showing a few geodesi
     A few geodesics in the $\cal S_{++}^2$ manifold.
 </div>
 
-#### Circulant matrices
+### Circulant matrices
 Now, let's move to [circulant matrices](https://en.wikipedia.org/wiki/Circulant_matrix) that also happen to be SPD.
 
 Let us start from the case $n=2$.
@@ -155,14 +152,14 @@ We can now visualize the geodesics between circulant matrices on a 2D plane.
 
 <div class="row mt-3 justify-content-center">
     <div class="col-8 mt-3 mt-md-0">
-        <img class="img-fluid rounded z-depth-1" src="/assets/img/posts/circulant_distance/cone.png" alt="Geodesics in the circulant cone.">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/posts/circulant_distance/circ_cone.png" alt="Geodesics in the circulant cone.">
     </div>
 </div>
 <div class="caption">
     A few geodesics in the $\cal C_{++}^2$ manifold.
 </div>
 
-#### Geodesic formula for $\cal C_{++}^n$
+### Geodesic formula for $\cal C_{++}^n$
 
 We can take the geodesic formula for $\cal S_{++}^n$ and specialize it to the submanifold $\C_{++}^n$.
 Consider $P, Q \in \cal C_{++}^n$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $\cal F$:
@@ -199,27 +196,28 @@ def get_circ_geodesic(P: jax.Array, Q: jax.Array) -> Callable:
 # example usage
 P1 = jnp.array([ [3, 1], [1, 3]] )
 Q1 = jnp.array([ [1, 0], [0, 1]] )
-gamma = get_geodesic(P1, Q1)
+gamma = get_circ_geodesic(P1, Q1)
 times = jnp.linspace(0, 1, 100)
 path = vmap(gamma)(times)
 {% endhighlight %}
 
 
-#### Distances
+### Distances
 
 What about the distance between two circulant matrices?
 Again, we can just take the definition of distance that holds for generic SPD matrices, and use the properties of circulant matrices.
 We get
 
 $$
-d(P, Q) = |\ln (\Lambda_P\cdot \lambda_Q^{-1})|,
+d(P, Q) = |\ln (\Lambda_P\cdot \Lambda_Q^{-1})|,
 $$
+
 where $\Lambda_P, \Lambda_Q$ are the vectorized spectra of the matrices $P, Q$ (in other words, their DFT).
 
 TODO: find analogies in signal processing maybe?
 
 
-#### Open questions
+### Open questions
 
 I have one question left at the moment (hopefully, more will arise).
 The question is: given a matrix $P\in\cal S_{++}^n$, what is the *closest* matrix $Q\in \cal C_{++}^n$?
