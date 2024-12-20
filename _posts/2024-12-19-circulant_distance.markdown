@@ -162,17 +162,17 @@ We can now visualize the geodesics between circulant matrices on a 2D plane.
 ### Geodesic formula for $\mathcal{C}_{++}^n$
 
 We can take the geodesic formula for $\mathcal{S}_{++}^n$ and specialize it to the submanifold $\mathcal{C}_{++}^n$.
-Consider $P, Q \in \mathcal{C}_{++}^n$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $\cal F$:
+Consider $P, Q \in \mathcal{C}_{++}^n$; these are diagonalized by the [DFT matrix](https://en.wikipedia.org/wiki/Discrete_Fourier_transform), $\mathcal{F}$:
 
 $$
-P = \cal F \Lambda_P \cal F^{-1}, \quad
-Q = \cal F \Lambda_Q \cal F^{-1}.
+P = \mathcal{F} \Lambda_P \mathcal{F}^{-1}, \quad
+Q = \mathcal{F} \Lambda_Q \mathcal{F}^{-1}.
 $$
 
 Then, we get an easier expression for $\gamma: [0, 1] \to \mathcal{C}_{++}^n$:
 
 $$
-\gamma(t) = \cal F \frac{\Lambda_Q^t}{\Lambda_P^{t-1}} \cal F^{-1},
+\gamma(t) = \mathcal{F} \frac{\Lambda_Q^t}{\Lambda_P^{t-1}} \mathcal{F}^{-1},
 $$
 
 where the ratio and the power operation are understood to happen elementwise.
