@@ -231,5 +231,5 @@ I will maybe do that in the next days.
 ### References
 
 A list of references:
-* a definition of distance between PSD matrices: [http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf)
+* a definition of distance between SPD matrices: [http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf](http://www.ipb.uni-bonn.de/pdfs/Forstner1999Metric.pdf)
 * our recent paper: [https://arxiv.org/abs/2412.11521](https://arxiv.org/abs/2412.11521)
