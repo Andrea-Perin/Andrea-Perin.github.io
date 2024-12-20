@@ -153,7 +153,7 @@ $$
 with $$x>0$$ and $$|z| < x$$.
 This is a manifold, too!
 I will call it $$\mathcal{C}_{++}^2$$; this is a 2D manifold (one fewer dimension than $$\mathcal{S}_{++}^2$$).
-Specifically, it can be visualized as a slice of the cone above, obtained by intersecting it with the plane $x=y$.
+Specifically, it can be visualized as a slice of the cone above, obtained by intersecting it with the plane $$x=y$$.
 This is, again, a cone (at least algebraically speaking; I guess it is also geometrically a 2D cone).
 We can now visualize the geodesics between circulant matrices on a 2D plane.
 
@@ -216,7 +216,7 @@ Again, we can just take the definition of distance that holds for generic SPD ma
 We get
 
 $$
-d(P, Q)^2 = \sum_i \left(\ln\frac{(\Lambda_P)_i}{(\Lambda_Q)_i})\right)^2,
+d(P, Q)^2 = \sum_i \left(\ln\frac{(\Lambda_P)_i}{(\Lambda_Q)_i}\right)^2,
 $$
 
 where $$\Lambda_P, \Lambda_Q$$ are the spectra of the matrices $$P, Q$$ (in other words, their DFT).
