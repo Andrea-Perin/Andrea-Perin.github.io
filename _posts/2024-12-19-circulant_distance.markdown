@@ -163,7 +163,7 @@ We can now visualize the geodesics between circulant matrices on a 2D plane.
     </div>
 </div>
 <div class="caption">
-    A few geodesics in the $$\mathcal{C}_{++}^2$$ manifold.
+    A few geodesics in the $\mathcal{C}_{++}^2$ manifold.
 </div>
 
 ### Geodesic formula for $$\mathcal{C}_{++}^n$$
@@ -216,10 +216,17 @@ Again, we can just take the definition of distance that holds for generic SPD ma
 We get
 
 $$
-d(P, Q) = |\ln (\Lambda_P\cdot \Lambda_Q^{-1})|,
+d(P, Q)^2 = \sum_i \left(\ln\frac{(\Lambda_P)_i}{(\Lambda_Q)_i})\right)^2,
 $$
 
-where $$\Lambda_P, \Lambda_Q$$ are the vectorized spectra of the matrices $$P, Q$$ (in other words, their DFT).
+where $$\Lambda_P, \Lambda_Q$$ are the spectra of the matrices $$P, Q$$ (in other words, their DFT).
+After slight manipulation, this expression looks a lot like a usual Euclidean distance:
+
+$$
+d(P, Q)^2 = \sum_i \left(\ln(\Lambda_P)_i - \ln(\Lambda_Q)_i\right)^2,
+$$
+
+so a sum of squared *log-distances* between eigenvalues.
 
 TODO: find analogies in signal processing maybe?
 
